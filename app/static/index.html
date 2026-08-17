@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#080b14">
+  <title>ClipNova — Smart Video Clipper</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="ambient a1"></div>
+  <div class="ambient a2"></div>
+  <div class="noise"></div>
+
+  <main class="shell">
+    <header class="topbar glass">
+      <div class="brand">
+        <div class="brandMark">
+          <span></span><span></span><span></span>
+        </div>
+        <div>
+          <div class="brandName">ClipNova</div>
+          <div class="brandSub">smart clip studio</div>
+        </div>
+      </div>
+      <div class="statusPill"><i></i> Online Studio</div>
+    </header>
+
+    <section class="hero">
+      <div class="eyebrow">FAST • CLEAN • MOBILE FIRST</div>
+      <h1>Turn long videos into<br><span>ready-to-post clips.</span></h1>
+      <p>Paste a YouTube link, choose only the moments you need, apply captions, and export without filling your phone storage first.</p>
+    </section>
+
+    <section class="glass card urlCard">
+      <div class="stepHead">
+        <div class="stepNo">01</div>
+        <div>
+          <h2>Paste video link</h2>
+          <p>We'll fetch the video details before you choose clips.</p>
+        </div>
+      </div>
+
+      <div class="urlRow">
+        <div class="inputWrap">
+          <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.07.07l2-2a5 5 0 0 0-7.07-7.07l-1.15 1.15"/><path d="M14 11a5 5 0 0 0-7.07-.07l-2 2A5 5 0 0 0 12 20l1.15-1.15"/></svg>
+          <input id="urlInput" type="url" placeholder="https://youtube.com/watch?v=..." autocomplete="off">
+        </div>
+        <button class="primary" id="analyzeBtn">
+          <span>Analyze</span>
+          <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      </div>
+      <div id="urlError" class="error hidden"></div>
+    </section>
+
+    <section id="workspace" class="hidden">
+      <section class="videoGrid">
+        <div class="glass previewCard">
+          <div class="previewFrame">
+            <iframe id="ytFrame" title="YouTube preview" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+          <div class="videoMeta">
+            <img id="thumb" alt="">
+            <div>
+              <h3 id="videoTitle"></h3>
+              <p><span id="videoChannel"></span> • <span id="videoDuration"></span></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass infoCard">
+          <div class="metric">
+            <span>Selected clips</span>
+            <strong id="clipCount">1</strong>
+          </div>
+          <div class="metric">
+            <span>Total output</span>
+            <strong id="totalTime">00:30</strong>
+          </div>
+          <div class="metric">
+            <span>Source language</span>
+            <strong id="sourceLang">Auto</strong>
+          </div>
+          <div class="miniNote">Only your selected sections are requested for processing. The whole video does not need to be saved on your phone.</div>
+        </div>
+      </section>
+
+      <section class="glass card">
+        <div class="stepHead split">
+          <div class="left">
+            <div class="stepNo">02</div>
+            <div>
+              <h2>Choose your clips</h2>
+              <p>Add up to 6 timestamp ranges.</p>
+            </div>
+          </div>
+          <button id="addClipBtn" class="ghostBtn">+ Add clip</button>
+        </div>
+
+        <div id="clipsList" class="clipsList"></div>
+      </section>
+
+      <section class="glass card">
+        <div class="stepHead">
+          <div class="stepNo">03</div>
+          <div>
+            <h2>Export style</h2>
+            <p>Set quality and captions.</p>
+          </div>
+        </div>
+
+        <div class="settingsGrid">
+          <label class="field">
+            <span>Quality</span>
+            <select id="quality">
+              <option value="720">720p HD</option>
+              <option value="1080" selected>1080p Full HD</option>
+              <option value="1440">1440p 2K</option>
+              <option value="2160">2160p 4K</option>
+              <option value="best">Best available</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Caption language</span>
+            <select id="captionLanguage">
+              <option value="auto" selected>Auto detect</option>
+              <option value="en">English</option>
+              <option value="ur">Urdu</option>
+              <option value="hi">Hindi</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Caption style</span>
+            <select id="captionStyle">
+              <option value="modern" selected>Modern pill</option>
+              <option value="bold">Bold creator</option>
+              <option value="classic">Classic</option>
+            </select>
+          </label>
+
+          <label class="toggleTile">
+            <div>
+              <span>Burn captions</span>
+              <small>Uses available subtitles / auto-captions</small>
+            </div>
+            <input id="captions" type="checkbox" checked>
+            <i></i>
+          </label>
+        </div>
+
+        <label class="rights">
+          <input type="checkbox" id="rights">
+          <span>I own this video or have permission / rights to process and download these clips.</span>
+        </label>
+
+        <button id="renderBtn" class="renderBtn">
+          <span class="spark">✦</span>
+          <span>Render selected clips</span>
+          <span class="arrow">→</span>
+        </button>
+      </section>
+
+      <section id="progressCard" class="glass card hidden">
+        <div class="progressTop">
+          <div>
+            <div class="eyebrow">PROCESSING</div>
+            <h2 id="progressMessage">Starting…</h2>
+          </div>
+          <strong id="progressPct">0%</strong>
+        </div>
+        <div class="progressTrack"><div id="progressBar"></div></div>
+        <div class="processingDots"><span></span><span></span><span></span></div>
+        <div id="warnings" class="warnings hidden"></div>
+        <a id="downloadBtn" class="downloadBtn hidden" href="#">
+          <span>Download your clips</span><b>↓</b>
+        </a>
+      </section>
+    </section>
+
+    <footer class="footer">
+      <span>Created by</span>
+      <button id="creatorBtn" class="creator">
+        Nabigh Ahmed
+        <span class="verify" aria-label="verified">✓</span>
+      </button>
+    </footer>
+  </main>
+
+  <div id="creatorModal" class="modal hidden">
+    <div class="modalBackdrop"></div>
+    <div class="creatorReveal">
+      <div class="orbit o1"></div>
+      <div class="orbit o2"></div>
+      <div class="creatorAvatar">NA</div>
+      <div class="creatorName">Nabigh Ahmed <span class="verify big">✓</span></div>
+      <div class="creatorTag">CREATOR • DESIGNER • BUILDER</div>
+      <div class="pulseLine"></div>
+      <button id="closeCreator">Close</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+  <script src="/app.js"></script>
+</body>
+</html>
